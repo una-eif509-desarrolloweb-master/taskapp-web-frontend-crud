@@ -51,7 +51,7 @@ const Priority = (props) => {
     );
 
     useLayoutEffect(() => {
-        setIsNew(props.match.params.id ? false : true);
+        setIsNew(!props.match.params.id);
         retrieveUserById(props.match.params.id);
     }, [props.match.params.id]);
 
@@ -81,7 +81,6 @@ const Priority = (props) => {
         if (isNew) {
             PriorityService.create(priority)
                 .then(response => {
-
                     setPriority(response.data);
                     setSubmitted(true);
                     form.resetFields();
@@ -148,7 +147,9 @@ const Priority = (props) => {
             icon: <ExclamationCircleOutlined/>,
             content: 'Priority ['.concat(priority.label).concat(']'),
             onOk() {
-                deleteUser(priority.idUser);
+                deleteUser(priority.idPriority);
+                props.history.push("/priority");
+                window.location.reload();
             },
             onCancel() {
                 console.log('Cancel');
@@ -182,7 +183,11 @@ const Priority = (props) => {
                     <Button htmlType="button" onClick={onReset}>
                         Reset
                     </Button>
-
+                    <Button danger
+                            onClick={showConfirm}
+                    >
+                        Delete
+                    </Button>
                 </Form.Item>
 
                 {submitted ? (

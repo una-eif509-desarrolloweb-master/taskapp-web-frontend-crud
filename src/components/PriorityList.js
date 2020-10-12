@@ -22,22 +22,17 @@ const PriorityList = (props) => {
 
     useEffect(() => {
         getAllPrioritiesMethod();
-    },);
+    },[]);
 
     /** Service methods **/
     const getAllPrioritiesMethod = () => {
         PriorityService.getAll()
             .then(response => {
                 setPriorityList(response.data);
-                //console.log(response.data);
             })
             .catch(err => {
                 console.log(err);
                 setError(err)
-                if (err.response.status === 401) {
-                    props.history.push("/login");
-                    window.location.reload();
-                }
             });
     }
 
@@ -56,12 +51,20 @@ const PriorityList = (props) => {
         }
     ];
 
+    const redirect = () => {
+        if (error.response.status === 401) {
+            props.history.push("/login");
+            window.location.reload();
+        }
+    }
+
     return (
         <div>
-            <Table rowKey={priorityList => priorityList.idPriority} columns={columns} dataSource={priorityList}/>
-            {error ? (
-                <Alert message="Error in the system. Try again later." type="error" showIcon closable/>
-            ) : null}
+            {error  ?
+                redirect()
+                :
+                <Table rowKey={priorityList => priorityList.idPriority} columns={columns} dataSource={priorityList}/>
+            }
         </div>
     )
 };
