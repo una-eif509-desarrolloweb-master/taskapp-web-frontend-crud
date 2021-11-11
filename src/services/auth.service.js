@@ -6,7 +6,7 @@ const signup = data => {
 
 const login = data => {
     return http
-        .post('/login', data)
+        .post('/users/login', data)
         .then((response) => {
             console.log(response.headers.authorization);
             if (response.headers.authorization) {
